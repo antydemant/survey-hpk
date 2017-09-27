@@ -1,1 +1,9 @@
 node_modules
+.idea/modules.xml
+.idea/survey-hpk.iml
+.idea/workspace.xml
+/firebaseController.js
+firebaseController.js
+/bower_components/
+/routes/qwe
+/serviceAccount.js
