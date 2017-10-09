@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../helpers/databaseRefs');
 var validator = require('validator');
-var crypto = require('crypto');
+var crypto = require('../helpers/crypto');
 
 /*
 Firebase Database rules:
@@ -66,12 +66,33 @@ router.post('/create', function(req, res, next) {
     usersRef.push({
         username: req.body.username,
         email: req.body.email,
-        password: crypto.createHash('md5').update(req.body.password).digest('hex'),
-        token: crypto.createHash('md5').update((Date.now().toString() + req.body.email)).digest('hex'),
+        password: crypto(req.body.password),
+        token: crypto(Date.now().toString() + req.body.email),
         registration_date: Date.now().toString(),
         last_login: null
     });
     res.sendStatus(201);
+});
+
+router.post('/login', function(req, res, next) {
+
+    var usersRef = db.users;
+    usersRef.once('value',function (data) {
+        data.forEach(function (value) {
+            if(value.val().password === crypto(req.body.password) &&
+               value.val().email === req.body.email) {
+                var userRef = db.users.child(value.key);
+                userRef.update({
+                    token: crypto(Date.now().toString() + req.body.email)
+                });
+                userRef.once('value', function (userdata) {
+                    res.json({
+                        token:userdata.val().token
+                    })
+                })
+            }
+        })
+    });
 });
 
 module.exports = router;
