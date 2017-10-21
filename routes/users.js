@@ -75,21 +75,24 @@ router.post('/create', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-
     var usersRef = db.users;
     usersRef.once('value',function (data) {
         data.forEach(function (value) {
             if(value.val().password === crypto(req.body.password) &&
                value.val().email === req.body.email) {
                 var userRef = db.users.child(value.key);
+
                 userRef.update({
                     token: crypto(Date.now().toString() + req.body.email)
                 });
+
                 userRef.once('value', function (userdata) {
                     res.json({
-                        token:userdata.val().token
-                    })
-                })
+                        token: userdata.val().token
+                    });
+                });
+            } else {
+                res.sendStatus(404);
             }
         })
     });

@@ -1,5 +1,7 @@
 var firebase = require('../firebaseController');
+
 var database = firebase.database().ref();
+
 var questionGroup = database.child('questionGroup');
 var userGroup = database.child('userEmailGroup');
 var questions = database.child('questions');
