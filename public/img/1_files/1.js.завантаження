@@ -1,0 +1,16 @@
+
+	var n;
+
+
+function z1(n)
+{
+	
+	
+	n = Math.floor(n / 10);
+   
+    alert("Перша цифра числа = "+n);
+return n;
+}
+
+
+/* console.log("hello world") */
