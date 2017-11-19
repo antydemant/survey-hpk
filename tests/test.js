@@ -75,3 +75,21 @@ it('it should POST a result ', (done) => {
     done();
   });
 });
+
+describe('/DELETE/:id result', () => {
+      it('it should DELETE a result given the id', (done) => {
+        let result = new Result({title: "Chemistry", student: "Petrov", class: 9, mark: 6})
+        result.save((err, result) => {
+                chai.request(server)
+                .delete('/result/' + result.id)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('Book successfully deleted!');
+                    res.body.result.should.have.property('ok').eql(1);
+                    res.body.result.should.have.property('n').eql(1);
+                  done();
+                });
+          });
+      });
+  });
