@@ -76,6 +76,28 @@ it('it should POST a result ', (done) => {
   });
 });
 
+describe('/GET/:id result', () => {
+      it('it should GET a result by the given id', (done) => {
+        let result = new Result({ title: "Geometry", student: "Antonov", class: 11, mark: 11 });
+        result.save((err, result) => {
+            chai.request(server)
+            .get('/result/' + result.id)
+            .send(result)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('title');
+                res.body.should.have.property('student');
+                res.body.should.have.property('class');
+                res.body.should.have.property('mark');
+                res.body.should.have.property('_id').eql(book.id);
+              done();
+            });
+        });
+
+      });
+  });
+
 describe('/DELETE/:id result', () => {
       it('it should DELETE a result given the id', (done) => {
         let result = new Result({title: "Chemistry", student: "Petrov", class: 9, mark: 6})
